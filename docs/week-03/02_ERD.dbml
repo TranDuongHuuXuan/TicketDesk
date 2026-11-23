@@ -1,0 +1,83 @@
+// TicketDesk core MVP ERD — PostgreSQL logical design.
+// ticket_status_history is optional pending confirmation of NFR-06 audit/history.
+// No application schema or migrations are created by this file.
+
+Table users {
+  id bigint [pk, increment, note: 'Django BigAutoField-style surrogate key']
+  username varchar(150) [not null, unique]
+  password varchar(128) [not null, note: 'Encoded Django password hash only']
+  email varchar(254) [not null, note: 'Registration currently requires email; uniqueness is not confirmed']
+  role varchar(20) [not null, default: 'REQUESTER', note: 'Allowed: REQUESTER, SUPPORT_AGENT, MANAGER, ADMIN; add database CHECK constraint']
+  is_active boolean [not null, default: true]
+  is_staff boolean [not null, default: false, note: 'Django admin-site access; distinct from business role ADMIN']
+  is_superuser boolean [not null, default: false, note: 'Django permission bypass; not implied by business role ADMIN']
+  last_login timestamptz
+  date_joined timestamptz [not null, default: `now()`]
+
+  checks {
+    `role in ('REQUESTER', 'SUPPORT_AGENT', 'MANAGER', 'ADMIN')` [name: 'users_role_allowed']
+  }
+
+  Note: 'Based on Django AbstractUser. Framework-managed groups/permissions tables are outside this domain ERD.'
+}
+
+Table tickets {
+  id bigint [pk, increment]
+  requester_id bigint [not null]
+  description text [not null, note: 'Problem description from US-01; further required fields are open']
+  status varchar(20) [not null, default: 'NEW', note: 'Allowed: NEW, IN_PROGRESS, RESOLVED, CLOSED; add database CHECK constraint']
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (requester_id, created_at) [name: 'tickets_requester_created_idx']
+    (status, updated_at) [name: 'tickets_status_updated_idx']
+  }
+
+  checks {
+    `status in ('NEW', 'IN_PROGRESS', 'RESOLVED', 'CLOSED')` [name: 'tickets_status_allowed']
+  }
+
+  Note: 'No assignment, category, priority, attachment, or reference-code field in core MVP pending scope confirmation.'
+}
+
+Table comments {
+  id bigint [pk, increment]
+  ticket_id bigint [not null]
+  author_id bigint [not null]
+  body text [not null]
+  created_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (ticket_id, created_at) [name: 'comments_ticket_created_idx']
+  }
+
+  Note: 'Public-only comments; no visibility flag because private comments are excluded.'
+}
+
+// Optional: include only if business/retention stakeholders confirm audit history.
+Table ticket_status_history {
+  id bigint [pk, increment]
+  ticket_id bigint [not null]
+  changed_by_id bigint [note: 'Nullable only if approved system-originated transitions exist']
+  from_status varchar(20) [note: 'NULL for initial transition to NEW']
+  to_status varchar(20) [not null, note: 'Constrain to approved ticket statuses']
+  changed_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (ticket_id, changed_at) [name: 'ticket_status_history_ticket_changed_idx']
+  }
+
+  checks {
+    `from_status is null or from_status in ('NEW', 'IN_PROGRESS', 'RESOLVED', 'CLOSED')` [name: 'ticket_status_history_from_allowed']
+    `to_status in ('NEW', 'IN_PROGRESS', 'RESOLVED', 'CLOSED')` [name: 'ticket_status_history_to_allowed']
+  }
+
+  Note: 'Optional audit event table. Update tickets.status and insert history in one transaction.'
+}
+
+Ref: tickets.requester_id > users.id
+Ref: comments.ticket_id > tickets.id
+Ref: comments.author_id > users.id
+Ref: ticket_status_history.ticket_id > tickets.id
+Ref: ticket_status_history.changed_by_id > users.id
