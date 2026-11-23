@@ -1,0 +1,222 @@
+# HƯỚNG DẪN CÀI ĐẶT VÀ THIẾT LẬP MÔI TRƯỜNG PHÁT TRIỂN
+
+**Dự án:** TicketDesk  
+**Công ty thực tập:** Rainscales  
+**Người thực hiện:** Trần Dương Hữu Xuân  
+**Thời gian thực hiện:** Tuần 01  
+**Vị trí:** Thực tập sinh phát triển phần mềm (Full-stack Python/Django Intern)
+
+---
+
+## 1. MỤC ĐÍCH
+
+Tài liệu này trình bày các bước chuẩn bị và thiết lập môi trường phát triển trên hệ điều hành Windows phục vụ quá trình làm việc với dự án TicketDesk.
+
+Các nội dung bao gồm:
+
+- Chuẩn bị môi trường Python.
+- Cài đặt và cấu hình Git.
+- Chuẩn bị Visual Studio Code.
+- Kết nối và lấy mã nguồn từ GitHub.
+- Tìm hiểu cấu trúc dự án.
+- Chuẩn bị môi trường phục vụ quá trình phát triển Backend và Frontend.
+
+## 2. YÊU CẦU MÔI TRƯỜNG
+
+| Thành phần | Công cụ | Mục đích |
+|---|---|---|
+| Hệ điều hành | Windows | Môi trường phát triển |
+| Ngôn ngữ | Python | Phát triển Backend |
+| Quản lý mã nguồn | Git | Quản lý phiên bản |
+| Repository | GitHub | Lưu trữ mã nguồn |
+| IDE | Visual Studio Code | Viết và chỉnh sửa mã nguồn |
+| Terminal | PowerShell | Thực hiện các lệnh cấu hình |
+
+## 3. CÀI ĐẶT VÀ KIỂM TRA CÔNG CỤ
+
+### 3.1. Kiểm tra Python
+
+Mở PowerShell hoặc Terminal trong Visual Studio Code và thực hiện lệnh:
+
+```powershell
+python --version
+```
+
+Nếu Python được cài đặt và cấu hình đúng, Terminal sẽ hiển thị phiên bản Python hiện tại.
+
+Trường hợp hệ thống không nhận diện lệnh `python`, cần kiểm tra lại quá trình cài đặt và biến môi trường PATH.
+
+### 3.2. Kiểm tra Git
+
+Thực hiện lệnh:
+
+```powershell
+git --version
+```
+
+Nếu Git đã được cài đặt thành công, hệ thống sẽ hiển thị phiên bản Git đang sử dụng.
+
+Tiếp theo, cấu hình thông tin người dùng Git:
+
+```powershell
+git config --global user.name "Your Name"
+git config --global user.email "your-email@example.com"
+```
+
+Kiểm tra cấu hình:
+
+```powershell
+git config --global --list
+```
+
+### 3.3. Chuẩn bị Visual Studio Code
+
+Sử dụng Visual Studio Code làm môi trường phát triển chính.
+
+Các bước thực hiện:
+
+1. Khởi động Visual Studio Code.
+2. Mở thư mục chứa mã nguồn dự án.
+3. Kiểm tra khả năng tích hợp Terminal.
+4. Chuẩn bị các tiện ích mở rộng cần thiết cho quá trình phát triển Python và quản lý Git.
+
+Một số tiện ích có thể sử dụng:
+
+- Python Extension.
+- Pylance.
+- GitLens.
+
+## 4. KẾT NỐI VÀ LẤY MÃ NGUỒN DỰ ÁN
+
+### 4.1. Truy cập repository GitHub
+
+Repository dự án:
+
+https://github.com/TranDuongHuuXuan/TicketDesk
+
+Truy cập GitHub để kiểm tra thông tin repository, các nhánh mã nguồn và cấu trúc thư mục dự án.
+
+### 4.2. Kiểm tra repository từ xa
+
+Mở Terminal và kiểm tra cấu hình repository:
+
+```powershell
+git remote -v
+```
+
+Nếu cần thiết lập repository từ xa:
+
+```powershell
+git remote add origin https://github.com/TranDuongHuuXuan/TicketDesk.git
+```
+
+Kiểm tra lại thông tin:
+
+```powershell
+git remote -v
+```
+
+### 4.3. Lấy thông tin cập nhật từ repository
+
+Thực hiện lệnh:
+
+```powershell
+git fetch origin
+```
+
+Lệnh này giúp lấy thông tin cập nhật từ repository từ xa mà không tự động hợp nhất thay đổi vào nhánh hiện tại.
+
+Kiểm tra các nhánh:
+
+```powershell
+git branch -a
+```
+
+Nếu cần kiểm tra trạng thái mã nguồn:
+
+```powershell
+git status
+```
+
+## 5. CHUẨN BỊ MÔI TRƯỜNG PYTHON CHO DỰ ÁN
+
+Sau khi tiếp cận mã nguồn, cần xác định cấu trúc Backend và các tệp cấu hình phụ thuộc của dự án.
+
+### 5.1. Tìm hiểu cấu hình thư viện
+
+Kiểm tra các tệp cấu hình có trong repository, chẳng hạn:
+
+- `requirements.txt`
+- `pyproject.toml`
+- `Pipfile`
+
+Tùy theo cấu trúc thực tế của dự án, lựa chọn phương thức cài đặt phù hợp.
+
+### 5.2. Tạo môi trường ảo Python
+
+Tại thư mục Backend, có thể sử dụng lệnh:
+
+```powershell
+python -m venv venv
+```
+
+Kích hoạt môi trường ảo trên Windows PowerShell:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+Sau khi kích hoạt thành công, Terminal sẽ hiển thị tên môi trường ảo ở đầu dòng lệnh.
+
+### 5.3. Cài đặt thư viện phụ thuộc
+
+Nếu dự án sử dụng `requirements.txt`, thực hiện:
+
+```powershell
+pip install -r requirements.txt
+```
+
+Kiểm tra các thư viện đã cài đặt:
+
+```powershell
+pip list
+```
+
+Lưu ý: Chỉ thực hiện cài đặt theo tệp cấu hình và phiên bản Python tương thích với dự án.
+
+## 6. TÌM HIỂU CẤU TRÚC DỰ ÁN
+
+Sau khi truy cập repository, tiến hành khảo sát cấu trúc thư mục nhằm xác định các thành phần chính của hệ thống.
+
+Các nội dung cần tìm hiểu:
+
+- Thư mục Backend và cách tổ chức mã nguồn.
+- Thư mục Frontend và các thành phần giao diện.
+- Các tệp cấu hình môi trường.
+- Các thư viện và gói phụ thuộc.
+- Các thành phần phục vụ quá trình khởi chạy hệ thống.
+
+Việc tìm hiểu cấu trúc dự án giúp xác định vị trí các thành phần chức năng và chuẩn bị cho quá trình phát triển trong những tuần tiếp theo.
+
+## 7. KIỂM TRA SAU KHI THIẾT LẬP
+
+Sau khi hoàn thành các bước chuẩn bị, tiến hành kiểm tra:
+
+| STT | Nội dung kiểm tra | Kết quả mong đợi |
+|---|---|---|
+| 1 | Python | Terminal nhận diện được Python |
+| 2 | Git | Terminal nhận diện được Git |
+| 3 | Git Configuration | Thông tin người dùng Git được cấu hình |
+| 4 | Visual Studio Code | Có thể mở và quản lý mã nguồn |
+| 5 | GitHub Repository | Có thể truy cập repository |
+| 6 | Git Fetch | Lấy được thông tin cập nhật từ repository |
+| 7 | Python Virtual Environment | Có thể tạo và kích hoạt môi trường ảo |
+| 8 | Dependencies | Có thể cài đặt thư viện theo cấu hình dự án |
+
+## 8. KẾT LUẬN
+
+Thông qua quá trình chuẩn bị môi trường phát triển, em đã làm quen với các công cụ cần thiết phục vụ quá trình làm việc với dự án TicketDesk.
+
+Việc chuẩn bị Python, Git, GitHub và Visual Studio Code là bước nền tảng giúp quá trình tiếp cận, quản lý và phát triển mã nguồn được thuận tiện hơn.
+
+Các nội dung thiết lập chuyên sâu và kiểm tra khả năng vận hành hoàn chỉnh của hệ thống sẽ được tiếp tục thực hiện trong các giai đoạn tiếp theo.
